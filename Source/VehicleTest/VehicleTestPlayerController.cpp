@@ -1,0 +1,46 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+
+#include "VehicleTestPlayerController.h"
+#include "VehicleTestPawn.h"
+#include "VehicleTestUI.h"
+#include "EnhancedInputSubsystems.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
+
+void AVehicleTestPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// get the enhanced input subsystem
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		// add the mapping context so we get controls
+		Subsystem->AddMappingContext(InputMappingContext, 0);
+	}
+
+	// spawn the UI widget and add it to the viewport
+	VehicleUI = CreateWidget<UVehicleTestUI>(this, VehicleUIClass);
+
+	check(VehicleUI);
+
+	VehicleUI->AddToViewport();
+}
+
+void AVehicleTestPlayerController::Tick(float Delta)
+{
+	Super::Tick(Delta);
+
+	if (IsValid(VehiclePawn) && IsValid(VehicleUI))
+	{
+		VehicleUI->UpdateSpeed(VehiclePawn->GetChaosVehicleMovement()->GetForwardSpeed());
+		VehicleUI->UpdateGear(VehiclePawn->GetChaosVehicleMovement()->GetCurrentGear());
+	}
+}
+
+void AVehicleTestPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	// get a pointer to the controlled pawn
+	VehiclePawn = CastChecked<AVehicleTestPawn>(InPawn);
+}
