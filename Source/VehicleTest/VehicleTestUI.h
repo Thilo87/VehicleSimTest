@@ -39,4 +39,9 @@ protected:
 	/** Implemented in Blueprint to display the new gear */
 	UFUNCTION(BlueprintImplementableEvent, Category = Vehicle)
 	void OnGearUpdate(int32 NewGear);
+
+	UFUNCTION( BlueprintImplementableEvent, Category = Vehicle )
+	void OnExceedingMaxAllowedSpeed();
+
+	
 };

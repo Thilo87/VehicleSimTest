@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "SpeedZone/SpeedZone.h"
 #include "VehicleTestGameMode.generated.h"
 
 UCLASS(MinimalAPI)
@@ -13,6 +14,8 @@ class AVehicleTestGameMode : public AGameModeBase
 
 public:
 	AVehicleTestGameMode();
+
+	void SetCurrentSpeedZone( ASpeedZone* SpeedZone );
 };
 
 
