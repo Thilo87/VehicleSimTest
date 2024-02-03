@@ -27,6 +27,7 @@ void ASpeedZone::Tick(float DeltaSeconds)
 	if ( !PlayerController.IsValid() || !bIsVehicleInSpeedZone )
 		return;
 
+	// tell player controller if the player's vehicle exceeded the speed limit or has stopped to exceed it
 	if ( const AVehicleTestPawn* Pawn = Cast< AVehicleTestPawn >( PlayerController->GetPawn() ) )
 	{
 		if ( !bIsVehicleExceedingSpeedLimit )
@@ -54,7 +55,7 @@ void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if ( !PlayerController.IsValid() )
 		return;
-
+	
 	SetActorTickEnabled( true );
 	
 	bIsVehicleInSpeedZone = true;
@@ -72,7 +73,8 @@ void ASpeedZone::NotifyActorEndOverlap(AActor* OtherActor)
 	
 	bIsVehicleInSpeedZone = false;
 	PlayerController->OnLeftSpeedZone();
-	
+
+	// we assume that if the player's vehicle left the speed zone, it's also "stopping to exceed the speed limit"
 	if ( bIsVehicleExceedingSpeedLimit )
 	{
 		bIsVehicleExceedingSpeedLimit = false;

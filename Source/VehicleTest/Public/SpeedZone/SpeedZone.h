@@ -10,15 +10,20 @@
 class AVehicleTestPlayerController;
 
 /**
- * 
+ * Actor for a speed zone with a speed limit
  */
 UCLASS( Category = "Speed Zone" )
 class VEHICLETEST_API ASpeedZone : public ATriggerBox
 {
 	GENERATED_BODY()
-	
+
+	/** Pointer to the player controller */
 	TWeakObjectPtr< AVehicleTestPlayerController > PlayerController;
+
+	/** If the player's vehicle is currently exceeding the speed limit of this speed zone */
 	bool bIsVehicleExceedingSpeedLimit = false;
+
+	/** If the player's vehicle is currently in this speed zone */
 	bool bIsVehicleInSpeedZone = false;
 
 public:
@@ -26,7 +31,7 @@ public:
 
 	virtual void BeginPlay() override;
 	
-	/** Max allowed speed in cm/s */
+	/** Speed limit in cm/s */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Speed Zone|Properties" )
 	float SpeedLimit = 1388.89f;
 
