@@ -10,6 +10,7 @@
 ASpeedZone::ASpeedZone()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 }
 
 void ASpeedZone::BeginPlay()
@@ -54,6 +55,8 @@ void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 	if ( !PlayerController.IsValid() )
 		return;
 
+	SetActorTickEnabled( true );
+	
 	bIsVehicleInSpeedZone = true;
 	PlayerController->OnEnteredSpeedZone( this );
 }
@@ -65,6 +68,8 @@ void ASpeedZone::NotifyActorEndOverlap(AActor* OtherActor)
 	if ( !PlayerController.IsValid() )
 		return;
 
+	SetActorTickEnabled( false );
+	
 	bIsVehicleInSpeedZone = false;
 	PlayerController->OnLeftSpeedZone();
 	
