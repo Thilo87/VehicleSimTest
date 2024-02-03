@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "SpeedZone/SpeedZone.h"
+#include "StopZone/StopZone.h"
 #include "VehicleTestPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -40,6 +41,9 @@ protected:
 	UPROPERTY()
 	ASpeedZone* CurrentSpeedZone;
 
+	UPROPERTY()
+	AStopZone* CurrentStopZone;
+
 	// Begin Actor interface
 protected:
 
@@ -50,8 +54,14 @@ public:
 	
 	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
 	void OnLeftSpeedZone();
-	void OnStartedExceedingSpeedLimit() const;
-	void OnStoppedExceedingSpeedLimit() const;
+	void OnStartedExceedingSpeedLimit();
+	void OnStoppedExceedingSpeedLimit();
+
+
+	void OnEnteredStopZone( AStopZone* StopZone );
+	void OnLeftStopZone();
+	void OnStoppedLongEnough();
+	void OnDidNotStopLongEnough();
 	
 
 	// End Actor interface

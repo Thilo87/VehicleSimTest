@@ -20,3 +20,8 @@ void UVehicleTestUI::UpdateIsExceedingSpeedLimit(ASpeedZone* SpeedZone, bool bIs
 {
 	OnIsExceedingSpeedLimitUpdate( SpeedZone, bIsExceedingSpeedLimit );
 }
+
+void UVehicleTestUI::UpdateDidNotStopLongEnoughAtStopZone(AStopZone* StopZone)
+{
+	OnDidNotStopLongEnoughAtStopZone( StopZone );
+}

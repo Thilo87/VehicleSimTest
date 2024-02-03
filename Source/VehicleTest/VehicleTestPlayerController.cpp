@@ -48,14 +48,37 @@ void AVehicleTestPlayerController::OnLeftSpeedZone()
 	CurrentSpeedZone = nullptr;
 }
 
-void AVehicleTestPlayerController::OnStartedExceedingSpeedLimit() const
+void AVehicleTestPlayerController::OnStartedExceedingSpeedLimit()
 {
-	VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, true );
+	if ( IsValid( VehicleUI ) )
+		VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, true );
 }
 
-void AVehicleTestPlayerController::OnStoppedExceedingSpeedLimit() const
+void AVehicleTestPlayerController::OnStoppedExceedingSpeedLimit()
 {
-	VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, false );
+	if ( IsValid( VehicleUI ) )
+		VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, false );
+}
+
+void AVehicleTestPlayerController::OnEnteredStopZone(AStopZone* StopZone)
+{
+	CurrentStopZone = StopZone;
+}
+
+void AVehicleTestPlayerController::OnLeftStopZone()
+{
+	CurrentStopZone = nullptr;
+}
+
+void AVehicleTestPlayerController::OnStoppedLongEnough()
+{
+	
+}
+
+void AVehicleTestPlayerController::OnDidNotStopLongEnough()
+{
+	if ( IsValid( VehicleUI ) )
+		VehicleUI->UpdateDidNotStopLongEnoughAtStopZone( CurrentStopZone );
 }
 
 void AVehicleTestPlayerController::OnPossess(APawn* InPawn)

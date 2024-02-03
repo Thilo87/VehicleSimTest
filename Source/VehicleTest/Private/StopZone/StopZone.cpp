@@ -1,11 +1,71 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "StopSign/StopZone.h"
+#include "StopZone/StopZone.h"
 
+#include "ChaosWheeledVehicleMovementComponent.h"
+#include "VehicleTest/VehicleTestPawn.h"
+#include "VehicleTest/VehicleTestPlayerController.h"
 
 AStopZone::AStopZone()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
+}
+
+void AStopZone::Tick(float DeltaSeconds)
+{
+	Super::Tick( DeltaSeconds );
+
+	if ( !PlayerController.IsValid() )
+		return;
+
+	const AVehicleTestPawn* Pawn = Cast< AVehicleTestPawn >( PlayerController->GetPawn() );
+
+	if ( FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) < SMALL_NUMBER )
+		DurationVehicleInStopZoneAtZeroSpeed += DeltaSeconds;
+	else
+		DurationVehicleInStopZoneAtZeroSpeed = 0.f;
+	
+	if ( DurationVehicleInStopZoneAtZeroSpeed >= MinStopDuration )
+	{
+		SetActorTickEnabled( false );
+		bStoppedLongEnough = true;
+		
+		PlayerController->OnStoppedLongEnough();
+	}
+}
+
+void AStopZone::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap( OtherActor );
+
+	if ( !PlayerController.IsValid() )
+		return;
+
+	SetActorTickEnabled( true );
+	bIsVehicleInStopZone = true;
+
+	PlayerController->OnEnteredStopZone( this );
+}
+
+void AStopZone::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap( OtherActor );
+
+	if ( !PlayerController.IsValid() )
+		return;
+	
+	const bool bOldStoppedLongEnough = bStoppedLongEnough;
+
+	SetActorTickEnabled( false );
+	bIsVehicleInStopZone = false;
+	DurationVehicleInStopZoneAtZeroSpeed = 0.f;
+	bStoppedLongEnough = false;
+	
+	if ( !bOldStoppedLongEnough )
+		PlayerController->OnDidNotStopLongEnough();
+
+	PlayerController->OnLeftStopZone();
 }
 

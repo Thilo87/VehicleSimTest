@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "SpeedZone/SpeedZone.h"
+#include "StopZone/StopZone.h"
 #include "VehicleTestUI.generated.h"
 
 /**
@@ -33,6 +34,8 @@ public:
 
 	void UpdateIsExceedingSpeedLimit( ASpeedZone* SpeedZone, bool bIsExceedingSpeedLimit );
 
+	void UpdateDidNotStopLongEnoughAtStopZone( AStopZone* StopZone );
+
 protected:
 
 	/** Implemented in Blueprint to display the new speed */
@@ -45,5 +48,8 @@ protected:
 
 	UFUNCTION( BlueprintImplementableEvent, Category = Vehicle )
 	void OnIsExceedingSpeedLimitUpdate( ASpeedZone* SpeedZone, bool bIsExceedingSpeedLimit );
+
+	UFUNCTION( BlueprintImplementableEvent, Category = Vehicle )
+	void OnDidNotStopLongEnoughAtStopZone( AStopZone* StopZone );
 	
 };
