@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RoadSign/RoadSign.h"
 #include "SpeedSign.generated.h"
 
 UCLASS()
-class VEHICLETEST_API ASpeedSign : public AActor
+class VEHICLETEST_API ASpeedSign : public ARoadSign
 {
 	GENERATED_BODY()
 
