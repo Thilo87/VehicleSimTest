@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "SpeedZone/SpeedZone.h"
 #include "VehicleTestUI.generated.h"
 
 /**
@@ -30,6 +31,8 @@ public:
 	/** Called to update the gear display */
 	void UpdateGear(int32 NewGear);
 
+	void UpdateIsExceedingSpeedLimit( ASpeedZone* SpeedZone, bool bIsExceedingSpeedLimit );
+
 protected:
 
 	/** Implemented in Blueprint to display the new speed */
@@ -41,7 +44,6 @@ protected:
 	void OnGearUpdate(int32 NewGear);
 
 	UFUNCTION( BlueprintImplementableEvent, Category = Vehicle )
-	void OnExceedingMaxAllowedSpeed();
-
+	void OnIsExceedingSpeedLimitUpdate( ASpeedZone* SpeedZone, bool bIsExceedingSpeedLimit );
 	
 };

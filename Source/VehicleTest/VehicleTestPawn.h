@@ -12,6 +12,8 @@ class UInputAction;
 class UChaosWheeledVehicleMovementComponent;
 struct FInputActionValue;
 
+class ASpeedZone;
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateVehicle, Log, All);
 
 /**
@@ -92,6 +94,11 @@ public:
 	virtual void Tick(float Delta) override;
 
 	// End Actor interface
+
+	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
+	void OnLeftSpeedZone( ASpeedZone* SpeedZone );
+	void OnExceededSpeedLimit( ASpeedZone* SpeedZone );
+	void OnStoppedExceedingSpeedLimit( ASpeedZone* SpeedZone );
 
 protected:
 

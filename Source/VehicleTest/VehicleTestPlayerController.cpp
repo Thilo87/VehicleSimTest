@@ -30,11 +30,32 @@ void AVehicleTestPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
-	if (IsValid(VehiclePawn) && IsValid(VehicleUI))
+	if ( IsValid(VehiclePawn) && IsValid(VehicleUI) )
 	{
 		VehicleUI->UpdateSpeed(VehiclePawn->GetChaosVehicleMovement()->GetForwardSpeed());
 		VehicleUI->UpdateGear(VehiclePawn->GetChaosVehicleMovement()->GetCurrentGear());
 	}
+	
+}
+
+void AVehicleTestPlayerController::OnEnteredSpeedZone(ASpeedZone* SpeedZone)
+{
+	CurrentSpeedZone = SpeedZone;
+}
+
+void AVehicleTestPlayerController::OnLeftSpeedZone()
+{
+	CurrentSpeedZone = nullptr;
+}
+
+void AVehicleTestPlayerController::OnStartedExceedingSpeedLimit() const
+{
+	VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, true );
+}
+
+void AVehicleTestPlayerController::OnStoppedExceedingSpeedLimit() const
+{
+	VehicleUI->UpdateIsExceedingSpeedLimit( CurrentSpeedZone, false );
 }
 
 void AVehicleTestPlayerController::OnPossess(APawn* InPawn)

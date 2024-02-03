@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "SpeedZone/SpeedZone.h"
 #include "VehicleTestPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -35,14 +36,23 @@ protected:
 	/** Pointer to the UI widget */
 	TObjectPtr<UVehicleTestUI> VehicleUI;
 
+	/** Speed zone the player's vehicle is currently driving in */
+	UPROPERTY()
+	ASpeedZone* CurrentSpeedZone;
+
 	// Begin Actor interface
 protected:
 
 	virtual void BeginPlay() override;
 
 public:
-
 	virtual void Tick(float Delta) override;
+	
+	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
+	void OnLeftSpeedZone();
+	void OnStartedExceedingSpeedLimit() const;
+	void OnStoppedExceedingSpeedLimit() const;
+	
 
 	// End Actor interface
 

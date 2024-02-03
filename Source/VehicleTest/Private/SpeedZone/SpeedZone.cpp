@@ -3,22 +3,74 @@
 
 #include "VehicleTest/Public/Speedzone/SpeedZone.h"
 
-#include "VehicleTest/VehicleTestGameMode.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
+#include "VehicleTest/VehicleTestPawn.h"
+#include "VehicleTest/VehicleTestPlayerController.h"
 
 ASpeedZone::ASpeedZone()
 {
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ASpeedZone::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerController = Cast< AVehicleTestPlayerController >( GetWorld()->GetFirstPlayerController() );
+}
+
+void ASpeedZone::Tick(float DeltaSeconds)
+{
+	Super::Tick( DeltaSeconds );
 	
+	if ( !PlayerController.IsValid() || !bIsVehicleInSpeedZone )
+		return;
+
+	if ( const AVehicleTestPawn* Pawn = Cast< AVehicleTestPawn >( PlayerController->GetPawn() ) )
+	{
+		if ( !bIsVehicleExceedingSpeedLimit )
+		{
+			if (  FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) > SpeedLimit )
+			{
+				bIsVehicleExceedingSpeedLimit = true;
+				PlayerController->OnStartedExceedingSpeedLimit();
+			}
+		}
+		else
+		{
+			if ( FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) <= SpeedLimit )
+			{
+				bIsVehicleExceedingSpeedLimit = false;
+				PlayerController->OnStoppedExceedingSpeedLimit();
+			}
+		}
+	}
 }
 
 void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap( OtherActor );
 
-	// make sure that other actor is actually the player
-	if ( const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController() )
-		if ( OtherActor != PlayerController->GetPawn() )
-			return;
+	if ( !PlayerController.IsValid() )
+		return;
 
-	if ( AVehicleTestGameMode* GameMode = Cast< AVehicleTestGameMode >( GetWorld()->GetAuthGameMode() ) )
-		GameMode->SetCurrentSpeedZone( this );
+	bIsVehicleInSpeedZone = true;
+	PlayerController->OnEnteredSpeedZone( this );
+}
+
+void ASpeedZone::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap( OtherActor );
+
+	if ( !PlayerController.IsValid() )
+		return;
+
+	bIsVehicleInSpeedZone = false;
+	PlayerController->OnLeftSpeedZone();
+	
+	if ( bIsVehicleExceedingSpeedLimit )
+	{
+		bIsVehicleExceedingSpeedLimit = false;
+		PlayerController->OnStoppedExceedingSpeedLimit();
+	}
 }
