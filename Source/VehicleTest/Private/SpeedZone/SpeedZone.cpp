@@ -53,7 +53,8 @@ void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap( OtherActor );
 
-	if ( !PlayerController.IsValid() )
+	if ( !PlayerController.IsValid()
+		|| PlayerController->GetPawn() != OtherActor )
 		return;
 	
 	SetActorTickEnabled( true );
@@ -66,7 +67,8 @@ void ASpeedZone::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap( OtherActor );
 
-	if ( !PlayerController.IsValid() )
+	if ( !PlayerController.IsValid()
+		|| PlayerController->GetPawn() != OtherActor )
 		return;
 
 	SetActorTickEnabled( false );
