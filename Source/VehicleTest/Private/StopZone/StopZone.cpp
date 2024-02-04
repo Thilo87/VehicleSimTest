@@ -30,8 +30,8 @@ void AStopZone::Tick(float DeltaSeconds)
 	const AVehicleTestPawn* Pawn = Cast< AVehicleTestPawn >( PlayerController->GetPawn() );
 	if ( !IsValid( Pawn ) )
 		return;
-
-	if ( FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) < SMALL_NUMBER )
+	
+	if ( FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) < 0.1f )
 		DurationVehicleInStopZoneAtZeroSpeed += DeltaSeconds;
 	else
 		DurationVehicleInStopZoneAtZeroSpeed = 0.f;
@@ -66,7 +66,8 @@ void AStopZone::NotifyActorEndOverlap(AActor* OtherActor)
 	if ( !PlayerController.IsValid()
 		|| PlayerController->GetPawn() != OtherActor )
 		return;
-	
+
+	// we want to call events only after all changes to this actor have been made
 	const bool bOldStoppedLongEnough = bStoppedLongEnough;
 
 	SetActorTickEnabled( false );
