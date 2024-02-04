@@ -49,7 +49,7 @@ AVehicleTestPawn::AVehicleTestPawn()
 	// Configure the car mesh
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionProfileName(FName("Vehicle"));
-
+	
 	// get the Chaos Wheeled movement component
 	ChaosVehicleMovement = CastChecked<UChaosWheeledVehicleMovementComponent>(GetVehicleMovement());
 
@@ -106,26 +106,6 @@ void AVehicleTestPawn::Tick(float Delta)
 	CameraYaw = FMath::FInterpTo(CameraYaw, 0.0f, Delta, 1.0f);
 
 	BackSpringArm->SetRelativeRotation(FRotator(0.0f, CameraYaw, 0.0f));
-}
-
-void AVehicleTestPawn::OnEnteredSpeedZone(ASpeedZone* SpeedZone)
-{
-	
-}
-
-void AVehicleTestPawn::OnLeftSpeedZone(ASpeedZone* SpeedZone)
-{
-
-}
-
-void AVehicleTestPawn::OnExceededSpeedLimit(ASpeedZone* SpeedZone)
-{
-	
-}
-
-void AVehicleTestPawn::OnStoppedExceedingSpeedLimit(ASpeedZone* SpeedZone)
-{
-	
 }
 
 void AVehicleTestPawn::Steering(const FInputActionValue& Value)

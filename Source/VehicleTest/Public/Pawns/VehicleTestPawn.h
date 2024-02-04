@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehiclePawn.h"
+#include "TrafficSimulation/TrafficSimAIMovementComponent.h"
 #include "VehicleTestPawn.generated.h"
 
 class UCameraComponent;
@@ -94,11 +95,6 @@ public:
 	virtual void Tick(float Delta) override;
 
 	// End Actor interface
-
-	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
-	void OnLeftSpeedZone( ASpeedZone* SpeedZone );
-	void OnExceededSpeedLimit( ASpeedZone* SpeedZone );
-	void OnStoppedExceedingSpeedLimit( ASpeedZone* SpeedZone );
 
 protected:
 
