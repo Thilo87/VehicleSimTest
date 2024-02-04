@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ChaosVehicleMovementComponent.h"
 #include "TrafficSimPath.h"
 #include "Components/ActorComponent.h"
 #include "TrafficSimAiMovementComponent.generated.h"
@@ -16,10 +17,17 @@ class VEHICLETEST_API UTrafficSimAiMovementComponent : public UActorComponent
 
 	/** Path the AI pawn is currently following */
 	UPROPERTY()
-	ATrafficSimPath* CurrentPath;
+	ATrafficSimPath* CurrentPath = nullptr;
 
 	/** Destination on the current path the vehicle is moving towards */
 	FVector CurrentDestination;
+	void UpdateCurrentDestination();
+
+	/** Current steering of the vehicle */
+	float CurrentSteering;
+	
+	/** Updates the steering according to the destination on the path */
+	void UpdateSteering();
 
 	FVector GetFishingRodEndLocation() const;
 
@@ -28,14 +36,20 @@ class VEHICLETEST_API UTrafficSimAiMovementComponent : public UActorComponent
 	bool FindNearestPathAndLocation( ATrafficSimPath*& Path, FVector& WorldLocationOnPath ) const;
 
 	/** Move the owning vehicle to the nearest location on a path */
-	bool MoveVehicleToNearestPathAndLocation();
-
+	bool TeleportVehicleToNearestPathAndLocation();
+	
+	/** Reference to the vehicle movement component of the owning vehicle */
+	TObjectPtr< UChaosVehicleMovementComponent > ChaosVehicleMovement;
+	
 public:
 	UTrafficSimAiMovementComponent();
 	
 	/** The "fishing rod" is a line that begins at the actors location and has this length */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	float FishingRodLength = 200.f;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	FVector2D MinMaxSteeringDeg = FVector2D( -90.f, 90.f );
 
 protected:
 	virtual void BeginPlay() override;

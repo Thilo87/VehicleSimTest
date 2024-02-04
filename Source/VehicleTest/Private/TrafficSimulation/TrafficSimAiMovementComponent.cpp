@@ -4,8 +4,10 @@
 #include "TrafficSimulation/TrafficSimAiMovementComponent.h"
 
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
-DEFINE_LOG_CATEGORY( TrafficSimAiMovementComponentLog );
+DEFINE_LOG_CATEGORY(TrafficSimAiMovementComponentLog);
 
 bool UTrafficSimAiMovementComponent::FindNearestPathAndLocation(ATrafficSimPath*& Path, FVector& WorldLocationOnPath) const
 {
@@ -32,7 +34,7 @@ bool UTrafficSimAiMovementComponent::FindNearestPathAndLocation(ATrafficSimPath*
 	return Path != nullptr;
 }
 
-bool UTrafficSimAiMovementComponent::MoveVehicleToNearestPathAndLocation()
+bool UTrafficSimAiMovementComponent::TeleportVehicleToNearestPathAndLocation()
 {
 	FVector Location;
 	if ( !FindNearestPathAndLocation( CurrentPath, Location ) )
@@ -42,9 +44,36 @@ bool UTrafficSimAiMovementComponent::MoveVehicleToNearestPathAndLocation()
 	return true;
 }
 
+void UTrafficSimAiMovementComponent::UpdateCurrentDestination()
+{
+	if ( !IsValid( CurrentPath ) )
+		return;
+
+	const USplineComponent* Spline = CurrentPath->Spline;
+	const float InputKey = Spline->FindInputKeyClosestToWorldLocation( GetFishingRodEndLocation() );
+	CurrentDestination = Spline->GetLocationAtSplineInputKey( InputKey, ESplineCoordinateSpace::World );
+	
+}
+
 FVector UTrafficSimAiMovementComponent::GetFishingRodEndLocation() const
 {
 	return GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * FishingRodLength;
+}
+
+void UTrafficSimAiMovementComponent::UpdateSteering()
+{
+	if ( !ChaosVehicleMovement )
+		return;
+
+	const FRotator& TargetRotation = UKismetMathLibrary::FindLookAtRotation( GetOwner()->GetActorLocation(), CurrentDestination );
+	const FRotator& DeltaRotation = UKismetMathLibrary::NormalizedDeltaRotator( GetOwner()->GetActorRotation(), TargetRotation );
+	
+	CurrentSteering = FMath::GetMappedRangeValueClamped< float >( 
+	TRange< float >( MinMaxSteeringDeg.X, MinMaxSteeringDeg.Y ),
+	TRange< float >( -1.f, 1.f ),
+			-DeltaRotation.Yaw );
+
+	ChaosVehicleMovement->SetSteeringInput( CurrentSteering );
 }
 
 UTrafficSimAiMovementComponent::UTrafficSimAiMovementComponent()
@@ -57,8 +86,12 @@ void UTrafficSimAiMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if ( !MoveVehicleToNearestPathAndLocation() )
-		UE_LOG( TrafficSimAiMovementComponentLog, Warning, TEXT( "Failed to find starting point for AI controlled vehicle" ) )
+	if ( !TeleportVehicleToNearestPathAndLocation() )
+		UE_LOG( TrafficSimAiMovementComponentLog, Error, TEXT( "Failed to find starting point for AI controlled vehicle" ) )
+
+	ChaosVehicleMovement = GetOwner()->GetComponentByClass< UChaosVehicleMovementComponent >();
+	if ( !ChaosVehicleMovement )
+		UE_LOG( TrafficSimAiMovementComponentLog, Error, TEXT( "Owner has no chaos vehicle movement component" ) )
 }
 
 
@@ -66,7 +99,9 @@ void UTrafficSimAiMovementComponent::BeginPlay()
 void UTrafficSimAiMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                                    FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	UpdateCurrentDestination();
+	UpdateSteering();
 }
 
