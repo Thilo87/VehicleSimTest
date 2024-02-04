@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "VehicleTestPawn.h"
-#include "VehicleTestWheelFront.h"
-#include "VehicleTestWheelRear.h"
+#include "Pawns/VehicleTestPawn.h"
+#include "Pawns/VehicleTestWheelFront.h"
+#include "Pawns/VehicleTestWheelRear.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"

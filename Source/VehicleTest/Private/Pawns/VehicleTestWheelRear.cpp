@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "VehicleTestWheelRear.h"
+#include "Pawns/VehicleTestWheelRear.h"
 #include "UObject/ConstructorHelpers.h"
 
 UVehicleTestWheelRear::UVehicleTestWheelRear()

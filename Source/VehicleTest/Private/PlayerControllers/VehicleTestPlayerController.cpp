@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "VehicleTestPlayerController.h"
-#include "VehicleTestPawn.h"
+#include "PlayerControllers/VehicleTestPlayerController.h"
+#include "Pawns/VehicleTestPawn.h"
 #include "VehicleTestUI.h"
 #include "EnhancedInputSubsystems.h"
 #include "ChaosWheeledVehicleMovementComponent.h"

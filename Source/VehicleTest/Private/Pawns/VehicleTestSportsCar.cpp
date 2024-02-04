@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "VehicleTestSportsCar.h"
-#include "VehicleTestSportsWheelFront.h"
-#include "VehicleTestSportsWheelRear.h"
+#include "Pawns/VehicleTestSportsCar.h"
+#include "Pawns/VehicleTestSportsWheelFront.h"
+#include "Pawns/VehicleTestSportsWheelRear.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 
 AVehicleTestSportsCar::AVehicleTestSportsCar()

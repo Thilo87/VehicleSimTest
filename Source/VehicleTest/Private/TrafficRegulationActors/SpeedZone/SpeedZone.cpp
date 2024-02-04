@@ -1,11 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "VehicleTest/Public/Speedzone/SpeedZone.h"
+#include "TrafficRegulationActors/Speedzone/SpeedZone.h"
 
 #include "ChaosWheeledVehicleMovementComponent.h"
-#include "VehicleTest/VehicleTestPawn.h"
-#include "VehicleTest/VehicleTestPlayerController.h"
+#include "Pawns/VehicleTestPawn.h"
+#include "PlayerControllers/VehicleTestPlayerController.h"
 
 ASpeedZone::ASpeedZone()
 {

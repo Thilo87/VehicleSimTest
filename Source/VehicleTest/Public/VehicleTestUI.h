@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "SpeedZone/SpeedZone.h"
-#include "StopZone/StopZone.h"
+#include "TrafficRegulationActors/SpeedZone/SpeedZone.h"
+#include "TrafficRegulationActors/StopZone/StopZone.h"
 #include "VehicleTestUI.generated.h"
 
 /**

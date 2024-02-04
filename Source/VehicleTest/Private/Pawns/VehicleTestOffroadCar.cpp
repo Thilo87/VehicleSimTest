@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "VehicleTestOffroadCar.h"
-#include "VehicleTestOffroadWheelFront.h"
-#include "VehicleTestOffroadWheelRear.h"
+#include "Pawns/VehicleTestOffroadCar.h"
+#include "Pawns/VehicleTestOffroadWheelFront.h"
+#include "Pawns/VehicleTestOffroadWheelRear.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 

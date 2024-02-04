@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "SpeedZone/SpeedZone.h"
+#include "TrafficRegulationActors/SpeedZone/SpeedZone.h"
 #include "VehicleTestGameMode.generated.h"
 
 UCLASS(MinimalAPI)

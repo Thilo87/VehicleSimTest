@@ -1,8 +1,4 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "VehicleTest/Public/TrafficLight/IntersectionTrafficLightController.h"
-
-
-
-
+#include "TrafficRegulationActors/TrafficLight/TrafficLightProperties.h"

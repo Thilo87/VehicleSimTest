@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "SpeedZone/SpeedZone.h"
-#include "StopZone/StopZone.h"
+#include "TrafficRegulationActors/SpeedZone/SpeedZone.h"
+#include "TrafficRegulationActors/StopZone/StopZone.h"
 #include "VehicleTestPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -56,8 +56,7 @@ public:
 	void OnLeftSpeedZone();
 	void OnStartedExceedingSpeedLimit();
 	void OnStoppedExceedingSpeedLimit();
-
-
+	
 	void OnEnteredStopZone( AStopZone* StopZone );
 	void OnLeftStopZone();
 	void OnStoppedLongEnough();

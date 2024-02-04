@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../Types.h"
+#include "Types.h"
 #include "TrafficLight.generated.h"
 
 UCLASS()

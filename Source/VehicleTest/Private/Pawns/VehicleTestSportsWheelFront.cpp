@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "VehicleTestSportsWheelFront.h"
+#include "Pawns/VehicleTestSportsWheelFront.h"
 
 UVehicleTestSportsWheelFront::UVehicleTestSportsWheelFront()
 {

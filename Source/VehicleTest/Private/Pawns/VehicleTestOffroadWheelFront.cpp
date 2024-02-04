@@ -1,14 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "VehicleTestOffroadWheelRear.h"
+#include "Pawns/VehicleTestOffroadWheelFront.h"
 
-UVehicleTestOffroadWheelRear::UVehicleTestOffroadWheelRear()
+UVehicleTestOffroadWheelFront::UVehicleTestOffroadWheelFront()
 {
-	WheelRadius = 50.f;
+	WheelRadius = 50.0f;
 	CorneringStiffness = 750.0f;
 	FrictionForceMultiplier = 4.0f;
-	
+	bAffectedByEngine = true;
+
 	SuspensionMaxRaise = 20.0f;
 	SuspensionMaxDrop = 20.0f;
 	WheelLoadRatio = 1.0f;
