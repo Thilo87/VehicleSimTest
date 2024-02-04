@@ -6,6 +6,7 @@
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "Pawns/VehicleTestPawn.h"
 #include "PlayerControllers/VehicleTestPlayerController.h"
+#include "TrafficSimulation/AiControlledCar/TrafficSimAiControlledCar.h"
 
 ASpeedZone::ASpeedZone()
 {
@@ -53,6 +54,13 @@ void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap( OtherActor );
 
+	// if the other actor is AI-controlled, we don't need so much functionality
+	if ( ATrafficSimAiControlledCar* AiControlledCar = Cast< ATrafficSimAiControlledCar >( OtherActor ) )
+	{
+		AiControlledCar->OnEnteredSpeedZone( this );
+		return;
+	}
+
 	if ( !PlayerController.IsValid()
 		|| PlayerController->GetPawn() != OtherActor )
 		return;
@@ -66,6 +74,13 @@ void ASpeedZone::NotifyActorBeginOverlap(AActor* OtherActor)
 void ASpeedZone::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap( OtherActor );
+
+	// if the other actor is AI-controlled, we don't need so much functionality
+	if ( ATrafficSimAiControlledCar* AiControlledCar = Cast< ATrafficSimAiControlledCar >( OtherActor ) )
+	{
+		AiControlledCar->OnLeftSpeedZone();
+		return;
+	}
 
 	if ( !PlayerController.IsValid()
 		|| PlayerController->GetPawn() != OtherActor )

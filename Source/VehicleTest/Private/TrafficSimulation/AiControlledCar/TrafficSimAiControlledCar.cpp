@@ -31,6 +31,8 @@ void ATrafficSimAiControlledCar::UpdateBlackboardVariables()
 	UpdateEstimatedBrakingDistance();
 	UpdateDistanceToCarAhead();
 	UpdateShouldBreak();
+	UpdateAboveSpeedLimit();
+	UpdateBelowSpeedLimit();
 }
 
 void ATrafficSimAiControlledCar::UpdateEstimatedBrakingDistance()
@@ -84,6 +86,40 @@ void ATrafficSimAiControlledCar::SetShouldBreak(bool NewShouldBreak)
 {
 	bShouldBreak = NewShouldBreak;
 	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameShouldBreak, bShouldBreak );
+}
+
+void ATrafficSimAiControlledCar::UpdateAboveSpeedLimit()
+{
+	const float ForwardSpeed = FMath::Abs( ChaosVehicleMovement->GetForwardSpeed() );
+	SetAboveSpeedLimit( ForwardSpeed > CurrentSpeedLimit );
+}
+
+void ATrafficSimAiControlledCar::SetAboveSpeedLimit( bool NewAboveSpeedLimit )
+{
+	bAboveSpeedLimit = NewAboveSpeedLimit;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameAboveSpeedLimit, bAboveSpeedLimit );
+}
+
+void ATrafficSimAiControlledCar::UpdateBelowSpeedLimit()
+{
+	const float ForwardSpeed = FMath::Abs( ChaosVehicleMovement->GetForwardSpeed() );
+	SetBelowSpeedLimit( ForwardSpeed < CurrentSpeedLimit );
+}
+
+void ATrafficSimAiControlledCar::SetBelowSpeedLimit(bool NewBelowSpeedLimit)
+{
+	bBelowSpeedLimit = NewBelowSpeedLimit;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameBelowSpeedLimit, bBelowSpeedLimit );
+}
+
+void ATrafficSimAiControlledCar::OnEnteredSpeedZone(ASpeedZone* SpeedZone)
+{
+	CurrentSpeedLimit = SpeedZone->SpeedLimit;
+}
+
+void ATrafficSimAiControlledCar::OnLeftSpeedZone()
+{
+	CurrentSpeedLimit = DefaultSpeedLimit;
 }
 
 

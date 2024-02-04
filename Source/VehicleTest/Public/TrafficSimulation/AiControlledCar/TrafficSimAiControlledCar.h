@@ -6,6 +6,7 @@
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "TrafficSimulation/TrafficSimAIMovementComponent.h"
 #include "WheeledVehiclePawn.h"
+#include "TrafficRegulationActors/Speedzone/SpeedZone.h"
 #include "TrafficSimulation/TrafficSimAIController.h"
 #include "UObject/Object.h"
 #include "TrafficSimAiControlledCar.generated.h"
@@ -42,10 +43,20 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	void SetShouldBreak( bool NewShouldBreak );
 	bool bShouldBreak = false;
 
-	void UpdateSpeedLimitReached();
-	void SetSpeedLimitReached();
-	bool bSpeedLimitReached = false;
 	
+	/*
+	 * Speed limit
+	 */
+
+	float CurrentSpeedLimit = 1388.89f;
+	
+	void UpdateAboveSpeedLimit();
+	void SetAboveSpeedLimit( bool NewAboveSpeedLimit );
+	bool bAboveSpeedLimit = false;
+	
+	void UpdateBelowSpeedLimit();
+	void SetBelowSpeedLimit( bool NewBelowSpeedLimit );
+	bool bBelowSpeedLimit = false;
 
 public:
 	ATrafficSimAiControlledCar();
@@ -69,7 +80,10 @@ public:
 	FName BBTNameShouldBreak = "bShouldBreak";
 
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
-	FName BBTNameSpeedLimitReached = "bSpeedLimitReached";
+	FName BBTNameAboveSpeedLimit = "bAboveSpeedLimit";
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameBelowSpeedLimit = "bBelowSpeedLimit";
 
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
@@ -86,6 +100,12 @@ public:
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	FVector VehicleCollisionBoxTraceHalfSize = FVector( 0.f, 50.f, 1000.f );
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	float DefaultSpeedLimit = 1388.89f;
+	
+	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
+	void OnLeftSpeedZone();
 	
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 
