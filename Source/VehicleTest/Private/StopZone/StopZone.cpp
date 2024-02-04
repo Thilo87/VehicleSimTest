@@ -13,6 +13,13 @@ AStopZone::AStopZone()
 	PrimaryActorTick.bStartWithTickEnabled = false;
 }
 
+void AStopZone::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerController = Cast< AVehicleTestPlayerController >( GetWorld()->GetFirstPlayerController() );
+}
+
 void AStopZone::Tick(float DeltaSeconds)
 {
 	Super::Tick( DeltaSeconds );
@@ -21,6 +28,8 @@ void AStopZone::Tick(float DeltaSeconds)
 		return;
 
 	const AVehicleTestPawn* Pawn = Cast< AVehicleTestPawn >( PlayerController->GetPawn() );
+	if ( !IsValid( Pawn ) )
+		return;
 
 	if ( FMath::Abs( Pawn->GetChaosVehicleMovement()->GetForwardSpeed() ) < SMALL_NUMBER )
 		DurationVehicleInStopZoneAtZeroSpeed += DeltaSeconds;
@@ -40,7 +49,8 @@ void AStopZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap( OtherActor );
 
-	if ( !PlayerController.IsValid() )
+	if ( !PlayerController.IsValid()
+		|| PlayerController->GetPawn() != OtherActor )
 		return;
 
 	SetActorTickEnabled( true );
@@ -53,7 +63,8 @@ void AStopZone::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap( OtherActor );
 
-	if ( !PlayerController.IsValid() )
+	if ( !PlayerController.IsValid()
+		|| PlayerController->GetPawn() != OtherActor )
 		return;
 	
 	const bool bOldStoppedLongEnough = bStoppedLongEnough;

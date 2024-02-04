@@ -32,6 +32,8 @@ class VEHICLETEST_API AStopZone : public ATriggerBox
 public:
 	AStopZone();
 
+	virtual void BeginPlay() override;
+
 	/** Duration the player's vehicle has to stop in the stop zone in seconds */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stop Zone|Properties" )
 	float MinStopDuration = 1.f;
