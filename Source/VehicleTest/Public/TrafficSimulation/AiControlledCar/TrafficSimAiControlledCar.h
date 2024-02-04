@@ -41,6 +41,10 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	void UpdateShouldBreak();
 	void SetShouldBreak( bool NewShouldBreak );
 	bool bShouldBreak = false;
+
+	void UpdateSpeedLimitReached();
+	void SetSpeedLimitReached();
+	bool bSpeedLimitReached = false;
 	
 
 public:
@@ -63,6 +67,9 @@ public:
 	/** Blackboard variable saying if the car should break (if the estimated braking distance is almost the distance to the car ahead) */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameShouldBreak = "bShouldBreak";
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameSpeedLimitReached = "bSpeedLimitReached";
 
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
