@@ -19,11 +19,6 @@ ETrafficLightPhase ATrafficLight::GetPreviousPhase() const
 	return static_cast< ETrafficLightPhase >( ( static_cast< int >( CurrentPhase ) - 1 ) % 4 );
 }
 
-bool ATrafficLight::IsRunning() const
-{
-	return GetWorld()->GetTimerManager().IsTimerActive( PhaseTimer );
-}
-
 void ATrafficLight::OnPhaseTimerTriggered()
 {
 	CurrentPhase = GetNextPhase();
@@ -37,6 +32,11 @@ void ATrafficLight::OnPhaseTimerTriggered()
 		GetCurrentPhaseDuration()
 	);
 
+	UpdateCollisionAndDesign();
+}
+
+void ATrafficLight::UpdateCollisionAndDesign()
+{
 	// enable or disable collision so that vehicles stop at red or amber phases
 	if ( CurrentPhase == ETrafficLightPhase::Green || CurrentPhase == ETrafficLightPhase::RedAmber )
 		TrafficLightZone->SetCollisionProfileName( "NoCollision" );
@@ -65,8 +65,23 @@ void ATrafficLight::BeginPlay()
 	PhaseDurations = { RedDuration, RedAmberDuration, GreenDuration, AmberDuration };
 	CurrentPhase = StartingPhase;
 
-	if ( bAutoStart )
-		TurnOn();
+	if ( bDelayFirstPhase )
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			PhaseTimer,
+			this,
+			&ATrafficLight::OnPhaseTimerTriggered,
+			FirstDelay
+		);
+
+		UpdateCollisionAndDesign();
+		return;
+	}
+
+	// in OnPhaseTimerTriggered we proceed to the next phase, so to start at the current phase we need
+	// first rewind the current phase to the previous one
+	CurrentPhase = GetPreviousPhase();
+	OnPhaseTimerTriggered();
 
 	Super::BeginPlay();
 }
@@ -74,39 +89,4 @@ void ATrafficLight::BeginPlay()
 ETrafficLightPhase ATrafficLight::GetCurrentPhase() const
 {
 	return CurrentPhase;
-}
-
-void ATrafficLight::TurnOn()
-{
-	if ( IsRunning() )
-		return;
-
-	// in OnPhaseTimerTriggered we proceed to the next phase, so to start at the current phase we need
-	// first rewind the current phase to the previous one
-	CurrentPhase = GetPreviousPhase();
-	OnPhaseTimerTriggered();
-}
-
-void ATrafficLight::TurnOff()
-{
-	if ( !IsRunning() )
-		return;
-
-	GetWorld()->GetTimerManager().ClearTimer( PhaseTimer );
-}
-
-void ATrafficLight::Restart()
-{
-	if ( IsRunning() )
-	{
-		TurnOff();
-		TurnOn();
-	}
-}
-
-void ATrafficLight::SetPhaseDurations(float NewRedDuration, float NewRedAmberDuration, float NewGreenDuration,
-                                      float NewAmberDuration)
-{
-	PhaseDurations = { NewRedDuration, NewRedAmberDuration, NewGreenDuration, NewAmberDuration };
-	Restart();
 }

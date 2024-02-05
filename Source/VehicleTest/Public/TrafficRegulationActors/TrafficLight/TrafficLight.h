@@ -27,14 +27,14 @@ class VEHICLETEST_API ATrafficLight : public AActor
 	UFUNCTION()
 	void OnPhaseTimerTriggered();
 
+	/** Update the collision according to the phase (e.g. collision enabled in red phase) and call event to update design */
+	void UpdateCollisionAndDesign();
+
 	/** Helper for easier access to the durations of the phases - see UPROPERTY phase variables */
 	TArray< float > PhaseDurations = { 10.f, 2.f, 10.f, 2.f };
 	float GetCurrentPhaseDuration() const;
 	ETrafficLightPhase GetNextPhase() const;
 	ETrafficLightPhase GetPreviousPhase() const;
-	
-	/** Turns the traffic light off and on */
-	void Restart();
 	
 	/** Static mesh of the traffic light */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Traffic Light" )
@@ -51,7 +51,7 @@ public:
 	
 	/** Red phase duration */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
-	float RedDuration = 5.f;
+	float RedDuration = 14.f;
 
 	/** Red-amber phase duration */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
@@ -59,45 +59,28 @@ public:
 
 	/** Green phase duration */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
-	float GreenDuration = 5.f;
+	float GreenDuration = 6.f;
 
 	/** Amber phase duration */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
-	float AmberDuration = 2.f;
+	float AmberDuration = 1.f;
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
+	bool bDelayFirstPhase = false;
+	
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
+	float FirstDelay = 3.f;
 
 	/** The phase the traffic light starts with */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
 	ETrafficLightPhase StartingPhase = ETrafficLightPhase::Red;
-
-	
-	/** Start the traffic light in BeginPlay()? */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light" )
-	bool bAutoStart = true;
 	
 
 	/** Get current phase of the traffic light */
 	UFUNCTION( BlueprintPure )
 	ETrafficLightPhase GetCurrentPhase() const;
 
-	/** Set the phase durations */
-	UFUNCTION( BlueprintCallable )
-	void SetPhaseDurations( float NewRedDuration, float NewRedAmberDuration, float NewGreenDuration, float NewAmberDuration );
-
 	
-	/** Turns the traffic light on */
-	UFUNCTION( BlueprintCallable )
-	void TurnOn();
-
-	/** Turns the traffic light off */
-	UFUNCTION( BlueprintCallable )
-	void TurnOff();
-
-	
-	/** If the traffic light is turned on */
-	UFUNCTION( BlueprintPure )
-	bool IsRunning() const;
-
-
 	/** Called when the traffic light phase has changed */
 	UFUNCTION( BlueprintImplementableEvent )
 	void OnTrafficLightPhaseChanged( ETrafficLightPhase NewTrafficLightPhase );
