@@ -29,7 +29,7 @@ void ATrafficSimAiControlledCar::UpdateBlackboardVariables()
 		return;
 	
 	UpdateEstimatedBrakingDistance();
-	UpdateDistanceToCarAhead();
+	UpdateDistanceToObstacleAhead();
 	UpdateShouldBreak();
 	UpdateAboveSpeedLimit();
 	UpdateBelowSpeedLimit();
@@ -47,7 +47,7 @@ void ATrafficSimAiControlledCar::SetEstimatedBrakingDistance(float NewEstimatedB
 	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameEstimatedBrakingDistance, EstimatedBrakingDistance );
 }
 
-void ATrafficSimAiControlledCar::UpdateDistanceToCarAhead()
+void ATrafficSimAiControlledCar::UpdateDistanceToObstacleAhead()
 {
 	FHitResult HitResult;
 
@@ -65,18 +65,18 @@ void ATrafficSimAiControlledCar::UpdateDistanceToCarAhead()
 		true
 		);
 	
-	SetDistanceToCarAhead( bWasHit ? HitResult.Distance : TNumericLimits< float >::Max() );
+	SetDistanceToObstacleAhead( bWasHit ? HitResult.Distance : TNumericLimits< float >::Max() );
 }
 
-void ATrafficSimAiControlledCar::SetDistanceToCarAhead(float NewDistanceToCarAhead)
+void ATrafficSimAiControlledCar::SetDistanceToObstacleAhead(float NewDistanceToObstacleAhead)
 {
-	DistanceToCarAhead = NewDistanceToCarAhead;
-	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameDistanceToCarAhead, DistanceToCarAhead );
+	DistanceToObstacleAhead = NewDistanceToObstacleAhead;
+	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameDistanceToObstacleAhead, DistanceToObstacleAhead );
 }
 
 void ATrafficSimAiControlledCar::UpdateShouldBreak()
 {
-	if ( DistanceToCarAhead <= EstimatedBrakingDistance || DistanceToCarAhead <= MinDistanceToCarAhead )
+	if ( DistanceToObstacleAhead <= EstimatedBrakingDistance || DistanceToObstacleAhead <= MinDistanceToCarAhead )
 		SetShouldBreak( true );
 	else
 		SetShouldBreak( false );

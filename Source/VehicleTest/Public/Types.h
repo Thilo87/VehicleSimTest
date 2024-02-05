@@ -6,6 +6,8 @@
 
 #define PRINT_SCREEN( x ) if ( GEngine ) { GEngine->AddOnScreenDebugMessage( -1, 500.0f, FColor::Yellow, x ); }
 
+static FName OBSTACLE_COLLISION_CHANNEL_NAME = "Obstacle";
+
 UENUM( BlueprintType )
 enum class ETrafficLightPhase : uint8
 {

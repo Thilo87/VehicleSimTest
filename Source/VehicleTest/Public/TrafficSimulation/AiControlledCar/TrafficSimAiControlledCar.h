@@ -28,16 +28,17 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	TObjectPtr< ATrafficSimAIController > AiController;
 
 
+	
 	void UpdateBlackboardVariables();
 	
 	/** Calculates an estimated breaking distance */
 	void UpdateEstimatedBrakingDistance();
 	void SetEstimatedBrakingDistance( float NewEstimatedBrakingDistance );
 	float EstimatedBrakingDistance;
-
-	void UpdateDistanceToCarAhead();
-	void SetDistanceToCarAhead( float NewDistanceToCarAhead );
-	float DistanceToCarAhead = TNumericLimits< float >::Max();
+	
+	void UpdateDistanceToObstacleAhead();
+	void SetDistanceToObstacleAhead( float NewDistanceToObstacleAhead );
+	float DistanceToObstacleAhead = TNumericLimits< float >::Max();
 
 	void UpdateShouldBreak();
 	void SetShouldBreak( bool NewShouldBreak );
@@ -73,7 +74,7 @@ public:
 
 	/** Blackboard variable containing the distance to the next car following the forward vector of the vehicle */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
-	FName BBTNameDistanceToCarAhead = "DistanceToCarAhead";
+	FName BBTNameDistanceToObstacleAhead = "DistanceToObstacleAhead";
 
 	/** Blackboard variable saying if the car should break (if the estimated braking distance is almost the distance to the car ahead) */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )

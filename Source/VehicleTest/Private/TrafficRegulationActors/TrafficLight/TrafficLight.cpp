@@ -36,6 +36,11 @@ void ATrafficLight::OnPhaseTimerTriggered()
 		GetCurrentPhaseDuration()
 	);
 
+	if ( CurrentPhase == ETrafficLightPhase::Green || CurrentPhase == ETrafficLightPhase::RedAmber )
+		TrafficLightZone->SetCollisionProfileName( "NoCollision" );
+	else
+		TrafficLightZone->SetCollisionProfileName( OBSTACLE_COLLISION_CHANNEL_NAME );
+		
 	OnTrafficLightPhaseChanged( CurrentPhase );
 }
 
@@ -48,6 +53,9 @@ ATrafficLight::ATrafficLight()
 	
 	TrafficLightZone = CreateDefaultSubobject< UBoxComponent >( TEXT( "Traffic Light Zone" ) );
 	TrafficLightZone->SetupAttachment( RootComponent );
+
+	// set default collision profile
+	TrafficLightZone->SetCollisionProfileName( OBSTACLE_COLLISION_CHANNEL_NAME );
 }
 
 void ATrafficLight::BeginPlay()
