@@ -7,6 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "StopSign.generated.h"
 
+/*
+ * Actor for the design of a stop sign
+ */
 UCLASS()
 class VEHICLETEST_API AStopSign : public ARoadSign
 {

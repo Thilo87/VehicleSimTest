@@ -41,12 +41,10 @@ protected:
 	UPROPERTY()
 	ASpeedZone* CurrentSpeedZone;
 
+	/** Stop zone the player's vehicle is currently driving through or stopping in */
 	UPROPERTY()
 	AStopZone* CurrentStopZone;
-
-	// Begin Actor interface
-protected:
-
+	
 	virtual void BeginPlay() override;
 
 public:
@@ -61,14 +59,8 @@ public:
 	void OnLeftStopZone();
 	void OnStoppedLongEnough();
 	void OnDidNotStopLongEnough();
-	
 
-	// End Actor interface
-
-	// Begin PlayerController interface
 protected:
 
-	virtual void OnPossess(APawn* InPawn) override;
-
-	// End PlayerController interface
+	virtual void OnPossess( APawn* InPawn ) override;
 };

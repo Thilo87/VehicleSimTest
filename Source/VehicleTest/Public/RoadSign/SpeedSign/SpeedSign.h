@@ -7,6 +7,9 @@
 #include "RoadSign/RoadSign.h"
 #include "SpeedSign.generated.h"
 
+/*
+ * Actor for the design of a speed sign
+ */
 UCLASS()
 class VEHICLETEST_API ASpeedSign : public ARoadSign
 {

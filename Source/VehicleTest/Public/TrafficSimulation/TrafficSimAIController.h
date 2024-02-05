@@ -7,7 +7,7 @@
 #include "TrafficSimAIController.generated.h"
 
 /**
- * 
+ * Base class for an AI controller for AI controlled vehicles
  */
 UCLASS()
 class VEHICLETEST_API ATrafficSimAIController : public AAIController

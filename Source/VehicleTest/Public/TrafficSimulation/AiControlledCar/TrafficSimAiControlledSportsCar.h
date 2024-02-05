@@ -8,7 +8,7 @@
 #include "TrafficSimAiControlledSportsCar.generated.h"
 
 /**
- * 
+ * AI-controlled sports car
  */
 UCLASS()
 class VEHICLETEST_API ATrafficSimAiControlledSportsCar : public ATrafficSimAiControlledCar

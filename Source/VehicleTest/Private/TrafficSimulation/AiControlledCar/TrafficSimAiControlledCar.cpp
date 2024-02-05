@@ -5,6 +5,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "TrafficRegulationActors/TrafficLight/TrafficLight.h"
 #include "TrafficSimulation/TrafficSimAIController.h"
 
 ATrafficSimAiControlledCar::ATrafficSimAiControlledCar()
@@ -49,8 +50,6 @@ void ATrafficSimAiControlledCar::SetEstimatedBrakingDistance(float NewEstimatedB
 
 void ATrafficSimAiControlledCar::UpdateDistanceToObstacleAhead()
 {
-	FHitResult HitResult;
-
 	const bool bWasHit = UKismetSystemLibrary::BoxTraceSingle(
 		GetWorld(),
 		GetActorLocation(),
@@ -61,11 +60,11 @@ void ATrafficSimAiControlledCar::UpdateDistanceToObstacleAhead()
 		false,
 		TArray< AActor* >( { this } ),
 		EDrawDebugTrace::None,
-		HitResult,
+		ObstacleAheadHitResult,
 		true
 		);
 	
-	SetDistanceToObstacleAhead( bWasHit ? HitResult.Distance : TNumericLimits< float >::Max() );
+	SetDistanceToObstacleAhead( bWasHit ? ObstacleAheadHitResult.Distance : TNumericLimits< float >::Max() );
 }
 
 void ATrafficSimAiControlledCar::SetDistanceToObstacleAhead(float NewDistanceToObstacleAhead)
@@ -76,10 +75,30 @@ void ATrafficSimAiControlledCar::SetDistanceToObstacleAhead(float NewDistanceToO
 
 void ATrafficSimAiControlledCar::UpdateShouldBreak()
 {
-	if ( DistanceToObstacleAhead <= EstimatedBrakingDistance || DistanceToObstacleAhead <= MinDistanceToCarAhead )
-		SetShouldBreak( true );
-	else
+	if ( !IsValid( ObstacleAheadHitResult.GetActor() ) )
+	{
 		SetShouldBreak( false );
+		return;
+	}
+
+	// if ( const ATrafficLight* TrafficLight = Cast< ATrafficLight >( ObstacleAheadHitResult.GetActor() ) )
+	// {
+	// 	if ( EstimatedBrakingDistance <= ( TrafficLight->GetActorLocation() - GetActorLocation() ).Length() )
+	// 		SetShouldBreak( true );
+	// 	else
+	// 		SetShouldBreak( false );
+	// 	
+	// 	return;
+	// }
+	
+	if ( DistanceToObstacleAhead <= EstimatedBrakingDistance
+		|| DistanceToObstacleAhead <= MinDistanceToObstacleAhead )
+	{
+		SetShouldBreak( true );
+		return;
+	}
+
+	SetShouldBreak( false );
 }
 
 void ATrafficSimAiControlledCar::SetShouldBreak(bool NewShouldBreak)

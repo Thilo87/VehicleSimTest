@@ -7,15 +7,13 @@
 #include "TrafficRegulationActors/SpeedZone/SpeedZone.h"
 #include "VehicleTestGameMode.generated.h"
 
-UCLASS(MinimalAPI)
+UCLASS( MinimalAPI )
 class AVehicleTestGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
 	AVehicleTestGameMode();
-
-	void SetCurrentSpeedZone( ASpeedZone* SpeedZone );
 };
 
 

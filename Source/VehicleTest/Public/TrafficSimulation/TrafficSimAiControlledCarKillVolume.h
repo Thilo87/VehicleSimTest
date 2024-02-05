@@ -17,6 +17,5 @@ class VEHICLETEST_API ATrafficSimAiControlledCarKillVolume : public ATriggerBox
 
 public:
 	ATrafficSimAiControlledCarKillVolume();
-	
 	virtual void NotifyActorBeginOverlap( AActor* OtherActor ) override;
 };

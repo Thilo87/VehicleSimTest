@@ -20,7 +20,7 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	GENERATED_BODY()
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true") )
-	UTrafficSimAiMovementComponent* AiMovementComponent;
+	TObjectPtr<UTrafficSimAiMovementComponent > AiMovementComponent;
 
 	/** Cast pointer to the Chaos Vehicle movement component */
 	TObjectPtr< UChaosWheeledVehicleMovementComponent > ChaosVehicleMovement;
@@ -35,7 +35,8 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	void UpdateEstimatedBrakingDistance();
 	void SetEstimatedBrakingDistance( float NewEstimatedBrakingDistance );
 	float EstimatedBrakingDistance;
-	
+
+	FHitResult ObstacleAheadHitResult;
 	void UpdateDistanceToObstacleAhead();
 	void SetDistanceToObstacleAhead( float NewDistanceToObstacleAhead );
 	float DistanceToObstacleAhead = TNumericLimits< float >::Max();
@@ -89,7 +90,7 @@ public:
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-	float MinDistanceToCarAhead = 1000.f;
+	float MinDistanceToObstacleAhead = 1000.f;
 
 	/** Collision channel for vehicles */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )

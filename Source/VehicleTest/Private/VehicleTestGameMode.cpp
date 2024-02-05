@@ -7,8 +7,3 @@ AVehicleTestGameMode::AVehicleTestGameMode()
 {
 	PlayerControllerClass = AVehicleTestPlayerController::StaticClass();
 }
-
-void AVehicleTestGameMode::SetCurrentSpeedZone(ASpeedZone* SpeedZone)
-{
-	
-}

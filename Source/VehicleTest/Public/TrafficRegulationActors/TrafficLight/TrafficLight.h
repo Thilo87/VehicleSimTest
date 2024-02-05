@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Types.h"
 #include "Components/BoxComponent.h"
-#include "Components/ShapeComponent.h"
 #include "TrafficLight.generated.h"
 
 /*

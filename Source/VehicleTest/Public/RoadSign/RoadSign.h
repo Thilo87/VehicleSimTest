@@ -6,13 +6,16 @@
 #include "GameFramework/Actor.h"
 #include "RoadSign.generated.h"
 
+/*
+ * Base class for the design of a road sign
+ */
 UCLASS( abstract )
 class VEHICLETEST_API ARoadSign : public AActor
 {
 	GENERATED_BODY()
 	
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ) )
-	UStaticMeshComponent* StaticMesh;
+	TObjectPtr< UStaticMeshComponent > StaticMesh;
 
 public:
 	ARoadSign();
