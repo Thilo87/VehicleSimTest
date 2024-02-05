@@ -65,9 +65,11 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
 	float AmberDuration = 1.f;
 
+	/** If we should delay the first phase - usually one side of the traffic lights should delay the first phase, the other one not */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
 	bool bDelayFirstPhase = false;
-	
+
+	/** Duration of the first delay */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Light|Phases" )
 	float FirstDelay = 3.f;
 
