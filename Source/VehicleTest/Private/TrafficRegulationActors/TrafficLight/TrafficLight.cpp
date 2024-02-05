@@ -28,6 +28,7 @@ void ATrafficLight::OnPhaseTimerTriggered()
 {
 	CurrentPhase = GetNextPhase();
 
+	// clear the current timer, set the timer again with the duration of the next phase
 	GetWorld()->GetTimerManager().ClearTimer( PhaseTimer );
 	GetWorld()->GetTimerManager().SetTimer(
 		PhaseTimer,
@@ -36,6 +37,7 @@ void ATrafficLight::OnPhaseTimerTriggered()
 		GetCurrentPhaseDuration()
 	);
 
+	// enable or disable collision so that vehicles stop at red or amber phases
 	if ( CurrentPhase == ETrafficLightPhase::Green || CurrentPhase == ETrafficLightPhase::RedAmber )
 		TrafficLightZone->SetCollisionProfileName( "NoCollision" );
 	else
@@ -69,7 +71,7 @@ void ATrafficLight::BeginPlay()
 	Super::BeginPlay();
 }
 
-ETrafficLightPhase ATrafficLight::GetCurrentPhase()
+ETrafficLightPhase ATrafficLight::GetCurrentPhase() const
 {
 	return CurrentPhase;
 }
@@ -79,6 +81,8 @@ void ATrafficLight::TurnOn()
 	if ( IsRunning() )
 		return;
 
+	// in OnPhaseTimerTriggered we proceed to the next phase, so to start at the current phase we need
+	// first rewind the current phase to the previous one
 	CurrentPhase = GetPreviousPhase();
 	OnPhaseTimerTriggered();
 }
