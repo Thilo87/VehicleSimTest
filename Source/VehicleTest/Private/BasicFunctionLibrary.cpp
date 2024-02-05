@@ -1,5 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
+﻿// Copyright (C) 2024 Thilo Noll. All Rights Reserved.
 
 #include "BasicFunctionLibrary.h"
 

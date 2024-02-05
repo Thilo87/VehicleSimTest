@@ -1,5 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
+// Copyright (C) 2024 Thilo Noll. All Rights Reserved.
 
 #include "PlayerControllers/VehicleTestPlayerController.h"
 #include "Pawns/VehicleTestPawn.h"

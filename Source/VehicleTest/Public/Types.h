@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2023-2024 Thilo Noll. All Rights Reserved.
+﻿// Copyright (C) 2024 Thilo Noll. All Rights Reserved.
 
 #pragma once
 
