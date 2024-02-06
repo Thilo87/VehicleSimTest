@@ -7,6 +7,7 @@
 #include "TrafficSimulation/TrafficSimAIMovementComponent.h"
 #include "WheeledVehiclePawn.h"
 #include "TrafficRegulationActors/Speedzone/SpeedZone.h"
+#include "TrafficRegulationActors/StopZone/StopZone.h"
 #include "TrafficSimulation/TrafficSimAIController.h"
 #include "UObject/Object.h"
 #include "TrafficSimAiControlledCar.generated.h"
@@ -74,6 +75,9 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	FORCEINLINE void SetBelowSpeedLimit( bool NewBelowSpeedLimit );
 	bool bBelowSpeedLimit = false;
 
+	bool bIsInStopZone = false;
+	FORCEINLINE void SetIsInStopZone( bool NewIsInStopZone );
+	
 public:
 	ATrafficSimAiControlledCar();
 
@@ -110,6 +114,10 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameBelowSpeedLimit = "bBelowSpeedLimit";
 
+	/** If the vehicle currently is in a stop zone */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameIsInStopZone = "bIsInStopZone";
+
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
@@ -138,6 +146,9 @@ public:
 	
 	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
 	void OnLeftSpeedZone();
+
+	void OnEnteredStopZone( AStopZone* StopZone );
+	void OnLeftStopZone();
 	
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 

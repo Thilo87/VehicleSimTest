@@ -9,6 +9,12 @@
 #include "TrafficRegulationActors/TrafficLight/TrafficLight.h"
 #include "TrafficSimulation/TrafficSimAIController.h"
 
+void ATrafficSimAiControlledCar::SetIsInStopZone(bool NewIsInStopZone)
+{
+	bIsInStopZone = NewIsInStopZone;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameIsInStopZone, bIsInStopZone );
+}
+
 ATrafficSimAiControlledCar::ATrafficSimAiControlledCar()
 {
 	GetMesh()->SetSimulatePhysics( true );
@@ -180,6 +186,16 @@ void ATrafficSimAiControlledCar::OnEnteredSpeedZone(ASpeedZone* SpeedZone)
 void ATrafficSimAiControlledCar::OnLeftSpeedZone()
 {
 	CurrentSpeedLimit = DefaultSpeedLimit;
+}
+
+void ATrafficSimAiControlledCar::OnEnteredStopZone(AStopZone* StopZone)
+{
+	SetIsInStopZone( true );
+}
+
+void ATrafficSimAiControlledCar::OnLeftStopZone()
+{
+	SetIsInStopZone( false );
 }
 
 

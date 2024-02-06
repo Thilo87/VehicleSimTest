@@ -5,6 +5,7 @@
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "Pawns/VehicleTestPawn.h"
 #include "PlayerControllers/VehicleTestPlayerController.h"
+#include "TrafficSimulation/AiControlledCar/TrafficSimAiControlledCar.h"
 
 AStopZone::AStopZone()
 {
@@ -47,6 +48,13 @@ void AStopZone::Tick(float DeltaSeconds)
 void AStopZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap( OtherActor );
+	
+	// TODO: also AI controlled cars should be aware of how long they were in the stop zone
+	if ( ATrafficSimAiControlledCar* AiControlledCar = Cast< ATrafficSimAiControlledCar >( OtherActor ) )
+	{
+		AiControlledCar->OnEnteredStopZone( this );
+		return;
+	}
 
 	if ( !PlayerController.IsValid()
 		|| PlayerController->GetPawn() != OtherActor )
@@ -62,6 +70,12 @@ void AStopZone::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap( OtherActor );
 
+	if ( ATrafficSimAiControlledCar* AiControlledCar = Cast< ATrafficSimAiControlledCar >( OtherActor ) )
+	{
+		AiControlledCar->OnLeftStopZone( this );
+		return;
+	}
+	
 	if ( !PlayerController.IsValid()
 		|| PlayerController->GetPawn() != OtherActor )
 		return;
