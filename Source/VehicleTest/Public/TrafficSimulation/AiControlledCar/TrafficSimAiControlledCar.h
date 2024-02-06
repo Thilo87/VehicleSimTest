@@ -28,7 +28,7 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	TObjectPtr< ATrafficSimAIController > AiController;
 
 
-	
+	/** Updates all blackboard variables (calls the update-methods below). The order in which those are executed is crucial. */
 	void UpdateBlackboardVariables();
 	
 	/** Calculates an estimated breaking distance */
@@ -36,14 +36,26 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	void SetEstimatedBrakingDistance( float NewEstimatedBrakingDistance );
 	float EstimatedBrakingDistance;
 
+	/** Checks if there is any obstacle ahead (wall, vehicle, red traffic light). Saves the result. */
 	FHitResult ObstacleAheadHitResult;
 	void UpdateDistanceToObstacleAhead();
 	void SetDistanceToObstacleAhead( float NewDistanceToObstacleAhead );
 	float DistanceToObstacleAhead = TNumericLimits< float >::Max();
 
+	/** Calculates the distance to a location where the vehicle should stop */
+	void UpdateDistanceToStopPoint();
+	void SetDistanceToStopPoint( float NewDistanceToStopPoint );
+	float DistanceToStopPoint = TNumericLimits< float >::Max();
+
+	/** Decides if the vehicle should break */
 	void UpdateShouldBreak();
 	void SetShouldBreak( bool NewShouldBreak );
 	bool bShouldBreak = false;
+
+	/** Calculates a suggested breaking strength for the vehicle if it should break (bShouldBreak == true) */
+	void UpdateSuggestedBreakStrength();
+	void SetSuggestedBreakStrength( float NewSuggestedBreakStrength );
+	float SuggestedBreakStrength = 0.f;
 
 	
 	/*
@@ -51,11 +63,13 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	 */
 
 	float CurrentSpeedLimit = 1388.89f;
-	
+
+	/** Updates if the vehicle is above the speed limit of the speed zone it's currently driving in */
 	void UpdateAboveSpeedLimit();
 	void SetAboveSpeedLimit( bool NewAboveSpeedLimit );
 	bool bAboveSpeedLimit = false;
-	
+
+	/** Updates if the vehicle is below the speed limit of the speed zone it's currently driving in */
 	void UpdateBelowSpeedLimit();
 	void SetBelowSpeedLimit( bool NewBelowSpeedLimit );
 	bool bBelowSpeedLimit = false;
@@ -77,13 +91,22 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameDistanceToObstacleAhead = "DistanceToObstacleAhead";
 
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameDistanceToStopPoint = "DistanceToStopPoint";
+
 	/** Blackboard variable saying if the car should break (if the estimated braking distance is almost the distance to the car ahead) */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameShouldBreak = "bShouldBreak";
 
+	/** A suggestion for the AI which break strength it should use if bShouldBreak is true */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameSuggestedBrakeStrength = "SuggestedBreakStrength";
+
+	/** If the vehicle is above the current speed limit */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameAboveSpeedLimit = "bAboveSpeedLimit";
 
+	/** If the vehicle is below the current speed limit */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameBelowSpeedLimit = "bBelowSpeedLimit";
 
@@ -103,8 +126,9 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	FVector VehicleCollisionBoxTraceHalfSize = FVector( 0.f, 50.f, 1000.f );
 
+	/** Default speed limit of the vehicle if it's not in any speed zone */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-	float DefaultSpeedLimit = 1388.89f;
+	float DefaultSpeedLimit = 1388.89f; // 50 km/h
 	
 	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
 	void OnLeftSpeedZone();

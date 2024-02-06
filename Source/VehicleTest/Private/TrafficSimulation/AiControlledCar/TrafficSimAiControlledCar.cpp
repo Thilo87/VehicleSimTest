@@ -27,10 +27,17 @@ void ATrafficSimAiControlledCar::UpdateBlackboardVariables()
 {
 	if ( !AiController || !AiController->GetBlackboardComponent() )
 		return;
+
+	// the order in which those methods are called is crucial!
 	
-	UpdateEstimatedBrakingDistance();
 	UpdateDistanceToObstacleAhead();
+
+	UpdateEstimatedBrakingDistance();
+	UpdateDistanceToStopPoint();
 	UpdateShouldBreak();
+	
+	UpdateSuggestedBreakStrength();
+	
 	UpdateAboveSpeedLimit();
 	UpdateBelowSpeedLimit();
 }
@@ -55,7 +62,7 @@ void ATrafficSimAiControlledCar::UpdateDistanceToObstacleAhead()
 		GetActorLocation() + GetActorForwardVector() * VehicleCollisionTraceDistance,
 		VehicleCollisionBoxTraceHalfSize,
 		FRotator( 0.f, 0.f, 0.f ),
-		VehicleCollisionChannel,
+		VehicleCollisionChannel, // TODO: change to obstacle collision channel
 		false,
 		TArray< AActor* >( { this } ),
 		EDrawDebugTrace::None,
@@ -72,6 +79,23 @@ void ATrafficSimAiControlledCar::SetDistanceToObstacleAhead(float NewDistanceToO
 	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameDistanceToObstacleAhead, DistanceToObstacleAhead );
 }
 
+void ATrafficSimAiControlledCar::UpdateDistanceToStopPoint()
+{
+	if ( !IsValid( ObstacleAheadHitResult.GetActor() ) )
+	{
+		SetDistanceToStopPoint( TNumericLimits< float >::Max() );
+		return;
+	}
+
+	SetDistanceToStopPoint( FMath::Max( 0.f, DistanceToObstacleAhead - MinDistanceToObstacleAhead ) );
+}
+
+void ATrafficSimAiControlledCar::SetDistanceToStopPoint(float NewDistanceToStopPoint)
+{
+	DistanceToStopPoint = NewDistanceToStopPoint;
+	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameDistanceToStopPoint, DistanceToStopPoint );
+}
+
 void ATrafficSimAiControlledCar::UpdateShouldBreak()
 {
 	if ( !IsValid( ObstacleAheadHitResult.GetActor() ) )
@@ -79,19 +103,8 @@ void ATrafficSimAiControlledCar::UpdateShouldBreak()
 		SetShouldBreak( false );
 		return;
 	}
-
-	// if ( const ATrafficLight* TrafficLight = Cast< ATrafficLight >( ObstacleAheadHitResult.GetActor() ) )
-	// {
-	// 	if ( EstimatedBrakingDistance <= ( TrafficLight->GetActorLocation() - GetActorLocation() ).Length() )
-	// 		SetShouldBreak( true );
-	// 	else
-	// 		SetShouldBreak( false );
-	// 	
-	// 	return;
-	// }
 	
-	if ( DistanceToObstacleAhead <= EstimatedBrakingDistance
-		|| DistanceToObstacleAhead <= MinDistanceToObstacleAhead )
+	if ( DistanceToStopPoint <= EstimatedBrakingDistance )
 	{
 		SetShouldBreak( true );
 		return;
@@ -104,6 +117,23 @@ void ATrafficSimAiControlledCar::SetShouldBreak(bool NewShouldBreak)
 {
 	bShouldBreak = NewShouldBreak;
 	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameShouldBreak, bShouldBreak );
+}
+
+void ATrafficSimAiControlledCar::UpdateSuggestedBreakStrength()
+{
+	if ( !bShouldBreak )
+	{
+		SetSuggestedBreakStrength( 0.f );
+		return;
+	}
+	
+	SetSuggestedBreakStrength( FMath::Clamp( 0.f, 1.f, EstimatedBrakingDistance / DistanceToStopPoint ) );
+}
+
+void ATrafficSimAiControlledCar::SetSuggestedBreakStrength(float NewSuggestedBreakStrength)
+{
+	SuggestedBreakStrength = NewSuggestedBreakStrength;
+	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameSuggestedBrakeStrength, SuggestedBreakStrength );
 }
 
 void ATrafficSimAiControlledCar::UpdateAboveSpeedLimit()
