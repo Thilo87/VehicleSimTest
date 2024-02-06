@@ -20,8 +20,9 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 {
 	GENERATED_BODY()
 
+	/** Component that controls the movement of the AI car */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car", meta = (AllowPrivateAccess = "true") )
-	TObjectPtr<UTrafficSimAiMovementComponent > AiMovementComponent;
+	TObjectPtr< UTrafficSimAiMovementComponent > AiMovementComponent;
 
 	/** Cast pointer to the Chaos Vehicle movement component */
 	TObjectPtr< UChaosWheeledVehicleMovementComponent > ChaosVehicleMovement;
