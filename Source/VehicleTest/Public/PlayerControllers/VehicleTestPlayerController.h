@@ -28,36 +28,52 @@ protected:
 	UInputMappingContext* InputMappingContext;
 
 	/** Pointer to the controlled vehicle pawn */
-	TObjectPtr<AVehicleTestPawn> VehiclePawn;
+	TObjectPtr< AVehicleTestPawn > VehiclePawn;
 
 	/** Type of the UI to spawn */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
-	TSubclassOf<UVehicleTestUI> VehicleUIClass;
+	TSubclassOf< UVehicleTestUI > VehicleUIClass;
 
 	/** Pointer to the UI widget */
-	TObjectPtr<UVehicleTestUI> VehicleUI;
+	TObjectPtr< UVehicleTestUI > VehicleUI;
 
 	/** Speed zone the player's vehicle is currently driving in */
 	UPROPERTY()
-	ASpeedZone* CurrentSpeedZone;
+	TObjectPtr< ASpeedZone > CurrentSpeedZone;
 
 	/** Stop zone the player's vehicle is currently driving through or stopping in */
 	UPROPERTY()
-	AStopZone* CurrentStopZone;
+	TObjectPtr< AStopZone > CurrentStopZone;
 	
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float Delta) override;
+	virtual void Tick( float Delta ) override;
+
 	
+	/** Called by a speed zone when the player has entered it */
 	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
-	void OnLeftSpeedZone();
-	void OnStartedExceedingSpeedLimit();
-	void OnStoppedExceedingSpeedLimit();
 	
+	/** Called by a speed zone when the player has left it */
+	void OnLeftSpeedZone();
+
+	/** Called by a speed zone when the player is exceeding the speed limit */
+	void OnStartedExceedingSpeedLimit();
+
+	/** Called by a speed zone when the player stopped to exceed the speed limit */
+	void OnStoppedExceedingSpeedLimit();
+
+	
+	/** Called by a stop zone when the player has entered it */
 	void OnEnteredStopZone( AStopZone* StopZone );
+
+	/** Called by a speed zone when the player has left it */
 	void OnLeftStopZone();
+
+	/** Called by a speed zone when the player has stopped long enough in it */
 	void OnStoppedLongEnough();
+
+	/** Called by a speed zone when the player has not stopped long enough in it */
 	void OnDidNotStopLongEnough();
 
 protected:

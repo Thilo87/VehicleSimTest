@@ -11,28 +11,28 @@ void AVehicleTestPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// get the enhanced input subsystem
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	if ( UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem< UEnhancedInputLocalPlayerSubsystem >( GetLocalPlayer() ) )
 	{
 		// add the mapping context so we get controls
-		Subsystem->AddMappingContext(InputMappingContext, 0);
+		Subsystem->AddMappingContext( InputMappingContext, 0 );
 	}
 
 	// spawn the UI widget and add it to the viewport
-	VehicleUI = CreateWidget<UVehicleTestUI>(this, VehicleUIClass);
+	VehicleUI = CreateWidget< UVehicleTestUI >( this, VehicleUIClass );
 
-	check(VehicleUI);
+	check( VehicleUI );
 
 	VehicleUI->AddToViewport();
 }
 
 void AVehicleTestPlayerController::Tick(float Delta)
 {
-	Super::Tick(Delta);
+	Super::Tick( Delta );
 
-	if ( IsValid(VehiclePawn) && IsValid(VehicleUI) )
+	if ( IsValid( VehiclePawn ) && IsValid( VehicleUI ) )
 	{
-		VehicleUI->UpdateSpeed(VehiclePawn->GetChaosVehicleMovement()->GetForwardSpeed());
-		VehicleUI->UpdateGear(VehiclePawn->GetChaosVehicleMovement()->GetCurrentGear());
+		VehicleUI->UpdateSpeed( VehiclePawn->GetChaosVehicleMovement()->GetForwardSpeed() );
+		VehicleUI->UpdateGear( VehiclePawn->GetChaosVehicleMovement()->GetCurrentGear() );
 	}
 	
 }
@@ -82,8 +82,8 @@ void AVehicleTestPlayerController::OnDidNotStopLongEnough()
 
 void AVehicleTestPlayerController::OnPossess(APawn* InPawn)
 {
-	Super::OnPossess(InPawn);
+	Super::OnPossess( InPawn );
 
 	// get a pointer to the controlled pawn
-	VehiclePawn = CastChecked<AVehicleTestPawn>(InPawn);
+	VehiclePawn = CastChecked< AVehicleTestPawn >( InPawn );
 }

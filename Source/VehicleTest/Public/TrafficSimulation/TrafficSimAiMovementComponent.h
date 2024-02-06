@@ -10,6 +10,9 @@
 
 DECLARE_LOG_CATEGORY_EXTERN( TrafficSimAiMovementComponentLog, Log, All );
 
+/*
+ * Component that controls the movement of an AI car along a path
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class VEHICLETEST_API UTrafficSimAiMovementComponent : public UActorComponent
 {
@@ -29,6 +32,7 @@ class VEHICLETEST_API UTrafficSimAiMovementComponent : public UActorComponent
 	/** Updates the steering according to the destination on the path */
 	void UpdateSteering();
 
+	/** Gets the end location of the "fishing rod" */
 	FVector GetFishingRodEndLocation() const;
 
 	// TODO: don't consider Z-coordinate?
@@ -48,6 +52,7 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	float FishingRodLength = 200.f;
 
+	/** Minimum and maximum steering to follow a path in degrees */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	FVector2D MinMaxSteeringDeg = FVector2D( -90.f, 90.f );
 

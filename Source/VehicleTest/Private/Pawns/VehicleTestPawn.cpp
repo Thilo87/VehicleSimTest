@@ -1,8 +1,6 @@
 // Copyright (C) 2024 Thilo Noll. All Rights Reserved.
 
 #include "Pawns/VehicleTestPawn.h"
-#include "Pawns/VehicleTestWheelFront.h"
-#include "Pawns/VehicleTestWheelRear.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -10,7 +8,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
-#include "Types.h"
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 

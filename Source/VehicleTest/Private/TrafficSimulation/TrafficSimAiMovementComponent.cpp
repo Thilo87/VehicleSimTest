@@ -51,7 +51,6 @@ void UTrafficSimAiMovementComponent::UpdateCurrentDestination()
 	const USplineComponent* Spline = CurrentPath->Spline;
 	const float InputKey = Spline->FindInputKeyClosestToWorldLocation( GetFishingRodEndLocation() );
 	CurrentDestination = Spline->GetLocationAtSplineInputKey( InputKey, ESplineCoordinateSpace::World );
-	
 }
 
 FVector UTrafficSimAiMovementComponent::GetFishingRodEndLocation() const
