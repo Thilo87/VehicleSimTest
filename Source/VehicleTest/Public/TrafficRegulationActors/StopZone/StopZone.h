@@ -31,15 +31,15 @@ class VEHICLETEST_API AStopZone : public AActor
 	bool bStoppedLongEnough = false;
 
 	/** Root scene component helper */
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Traffic Light" )
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Stop Zone" )
 	TObjectPtr< USceneComponent > RootSceneComponent;
 
 	/** Zone where the player or AI vehicles should stop */
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Traffic Light" )
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Stop Zone" )
 	TObjectPtr< UBoxComponent > StandingZone;
 
 	/** Zone where the stop line is. Is used for AI to be able to see the stop line. */
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Traffic Light" )
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, meta = ( AllowPrivateAccess = "true" ), Category = "Stop Zone" )
 	TObjectPtr< UBoxComponent > StopLineZone;
 
 	UFUNCTION()
