@@ -61,6 +61,8 @@ ATrafficLight::ATrafficLight()
 
 void ATrafficLight::BeginPlay()
 {
+	Super::BeginPlay();
+	
 	PhaseDurations = { RedDuration, RedAmberDuration, GreenDuration, AmberDuration };
 	CurrentPhase = StartingPhase;
 
@@ -82,7 +84,7 @@ void ATrafficLight::BeginPlay()
 	CurrentPhase = GetPreviousPhase();
 	OnPhaseTimerTriggered();
 
-	Super::BeginPlay();
+	
 }
 
 ETrafficLightPhase ATrafficLight::GetCurrentPhase() const
