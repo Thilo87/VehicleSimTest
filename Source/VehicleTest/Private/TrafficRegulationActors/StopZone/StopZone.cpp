@@ -72,7 +72,7 @@ void AStopZone::NotifyActorEndOverlap(AActor* OtherActor)
 
 	if ( ATrafficSimAiControlledCar* AiControlledCar = Cast< ATrafficSimAiControlledCar >( OtherActor ) )
 	{
-		AiControlledCar->OnLeftStopZone( this );
+		AiControlledCar->OnLeftStopZone();
 		return;
 	}
 	

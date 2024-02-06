@@ -36,9 +36,14 @@ void ATrafficSimAiControlledCar::UpdateBlackboardVariables()
 	if ( !AiController || !AiController->GetBlackboardComponent() )
 		return;
 
+	bIsMoving = FMath::Abs( ChaosVehicleMovement->GetForwardSpeed() ) > 0.1f;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameIsMoving, bIsMoving );
+
 	// the order in which those methods are called is crucial!
 	
 	UpdateDistanceToObstacleAhead();
+
+	UpdateIsStopZoneAhead();
 
 	UpdateEstimatedBrakingDistance();
 	UpdateDistanceToStopPoint();
@@ -85,6 +90,23 @@ void ATrafficSimAiControlledCar::SetDistanceToObstacleAhead(float NewDistanceToO
 {
 	DistanceToObstacleAhead = NewDistanceToObstacleAhead;
 	AiController->GetBlackboardComponent()->SetValueAsFloat( BBTNameDistanceToObstacleAhead, DistanceToObstacleAhead );
+}
+
+void ATrafficSimAiControlledCar::UpdateIsStopZoneAhead()
+{
+	if ( !IsValid(ObstacleAheadHitResult.GetActor() ) )
+	{
+		SetIsStopZoneAhead( false );
+		return;
+	}
+		
+	SetIsStopZoneAhead( Cast< AStopZone >( ObstacleAheadHitResult.GetActor() ) != nullptr );
+}
+
+void ATrafficSimAiControlledCar::SetIsStopZoneAhead(bool NewIsStopZoneAhead)
+{
+	bIsStopZoneAhead = NewIsStopZoneAhead;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameIsStopZoneAhead, bIsStopZoneAhead );
 }
 
 void ATrafficSimAiControlledCar::UpdateDistanceToStopPoint()

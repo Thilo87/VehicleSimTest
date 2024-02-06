@@ -28,6 +28,7 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 
 	TObjectPtr< ATrafficSimAIController > AiController;
 
+	bool bIsMoving = false;
 
 	/** Updates all blackboard variables (calls the update-methods below). The order in which those are executed is crucial. */
 	void UpdateBlackboardVariables();
@@ -42,6 +43,10 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	FORCEINLINE void UpdateDistanceToObstacleAhead();
 	FORCEINLINE void SetDistanceToObstacleAhead( float NewDistanceToObstacleAhead );
 	float DistanceToObstacleAhead = TNumericLimits< float >::Max();
+
+	FORCEINLINE void UpdateIsStopZoneAhead();
+	FORCEINLINE void SetIsStopZoneAhead( bool NewIsStopZoneAhead );
+	bool bIsStopZoneAhead = false;
 
 	/** Calculates the distance to a location where the vehicle should stop */
 	FORCEINLINE void UpdateDistanceToStopPoint();
@@ -117,6 +122,12 @@ public:
 	/** If the vehicle currently is in a stop zone */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName BBTNameIsInStopZone = "bIsInStopZone";
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameIsStopZoneAhead = "bIsStopZoneAhead";
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName BBTNameIsMoving = "bIsMoving";
 
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
