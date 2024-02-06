@@ -6,5 +6,5 @@ Features:
 - a player-controlled car with an UI that informs the player if he broke traffic rules
 
 <p align="center" style="margin : 0; padding-top:0;">
-<a href="https://www.youtube.com/watch?v=b4oH9bJDkNs"><img src="https://www.youtube.com/watch?v=b4oH9bJDkNs/0.jpg"></a>
+<a href="https://www.youtube.com/watch?v=b4oH9bJDkNs"><img src="https://img.youtube.com/vi/b4oH9bJDkNs/0.jpg"></a>
 </p>
