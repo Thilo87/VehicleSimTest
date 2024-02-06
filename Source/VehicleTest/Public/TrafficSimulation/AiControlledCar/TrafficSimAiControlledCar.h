@@ -15,23 +15,35 @@
 /**
  * More simple vehicle controlled, should be controlled by the AI
  */
-UCLASS()
+UCLASS( Category = "Traffic Sim Ai Controlled Car" )
 class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 {
 	GENERATED_BODY()
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true") )
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car", meta = (AllowPrivateAccess = "true") )
 	TObjectPtr<UTrafficSimAiMovementComponent > AiMovementComponent;
 
 	/** Cast pointer to the Chaos Vehicle movement component */
 	TObjectPtr< UChaosWheeledVehicleMovementComponent > ChaosVehicleMovement;
 
+	/** Cast pointer to the Ai controller */
 	TObjectPtr< ATrafficSimAIController > AiController;
 
-	bool bIsMoving = false;
+	/** The current speed limit of the vehicle - is changed if it enters or leaves a speed zone*/
+	float CurrentSpeedLimit = 1388.89f;
 
+	
+	/*
+	 * Blackboard updates
+	 */
+	
 	/** Updates all blackboard variables (calls the update-methods below). The order in which those are executed is crucial. */
 	void UpdateBlackboardVariables();
+
+	/** Checks if the vehicle is moving */
+	FORCEINLINE void UpdateIsMoving();
+	FORCEINLINE void SetIsMoving( bool NewIsMoving );
+	bool bIsMoving = false;
 	
 	/** Calculates an estimated breaking distance */
 	FORCEINLINE void UpdateEstimatedBrakingDistance();
@@ -44,6 +56,7 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	FORCEINLINE void SetDistanceToObstacleAhead( float NewDistanceToObstacleAhead );
 	float DistanceToObstacleAhead = TNumericLimits< float >::Max();
 
+	/** Checks if a stop zone is in front of the vehicle */
 	FORCEINLINE void UpdateIsStopZoneAhead();
 	FORCEINLINE void SetIsStopZoneAhead( bool NewIsStopZoneAhead );
 	bool bIsStopZoneAhead = false;
@@ -62,14 +75,7 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	FORCEINLINE void UpdateSuggestedBreakStrength();
 	FORCEINLINE void SetSuggestedBreakStrength( float NewSuggestedBreakStrength );
 	float SuggestedBreakStrength = 0.f;
-
 	
-	/*
-	 * Speed limit
-	 */
-
-	float CurrentSpeedLimit = 1388.89f;
-
 	/** Updates if the vehicle is above the speed limit of the speed zone it's currently driving in */
 	FORCEINLINE void UpdateAboveSpeedLimit();
 	FORCEINLINE void SetAboveSpeedLimit( bool NewAboveSpeedLimit );
@@ -79,13 +85,12 @@ class VEHICLETEST_API ATrafficSimAiControlledCar : public AWheeledVehiclePawn
 	FORCEINLINE void UpdateBelowSpeedLimit();
 	FORCEINLINE void SetBelowSpeedLimit( bool NewBelowSpeedLimit );
 	bool bBelowSpeedLimit = false;
-
+	
 	bool bIsInStopZone = false;
 	FORCEINLINE void SetIsInStopZone( bool NewIsInStopZone );
 	
 public:
 	ATrafficSimAiControlledCar();
-
 	virtual void BeginPlay() override;
 	
 	/*
@@ -93,75 +98,90 @@ public:
 	 */
 
 	/** Blackboard variable containing the estimated braking distance in cm */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameEstimatedBrakingDistance = "EstimatedBrakingDistance";
 
 	/** Blackboard variable containing the distance to the next car following the forward vector of the vehicle */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameDistanceToObstacleAhead = "DistanceToObstacleAhead";
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameDistanceToStopPoint = "DistanceToStopPoint";
 
 	/** Blackboard variable saying if the car should break (if the estimated braking distance is almost the distance to the car ahead) */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameShouldBreak = "bShouldBreak";
 
 	/** A suggestion for the AI which break strength it should use if bShouldBreak is true */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameSuggestedBrakeStrength = "SuggestedBreakStrength";
 
 	/** If the vehicle is above the current speed limit */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameAboveSpeedLimit = "bAboveSpeedLimit";
 
 	/** If the vehicle is below the current speed limit */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameBelowSpeedLimit = "bBelowSpeedLimit";
 
 	/** If the vehicle currently is in a stop zone */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameIsInStopZone = "bIsInStopZone";
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	/** If a stop zone is in front of the vehicle */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameIsStopZoneAhead = "bIsStopZoneAhead";
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	/** If the vehicle is moving */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|BBTNames" )
 	FName BBTNameIsMoving = "bIsMoving";
 
 	
+	/*
+	 * Properties
+	 */
+	
 	/** Minimum distance the vehicle should maintain to the car ahead */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	float MinDistanceToVehicle = 1000.f;
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	float MinDistanceToTrafficLight = 1000.f;
 	
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	float MinDistanceToStopLine = 100.f;
 
 	/** Collision channel for vehicles */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly )
-	TEnumAsByte< ETraceTypeQuery > VehicleCollisionChannel = UEngineTypes::ConvertToTraceType( ECC_GameTraceChannel1 );
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Traffic Sim Ai Controlled Car|Properties" )
+	TEnumAsByte< ETraceTypeQuery > VehicleCollisionTraceChannel = UEngineTypes::ConvertToTraceType( ECC_GameTraceChannel1 );
 
 	/** The distance in the direction of the forward vector of the vehicle in which we look for other vehicles */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	float VehicleCollisionTraceDistance = 10000.f;
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	/** The size of the box used for collision trace */
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	FVector VehicleCollisionBoxTraceHalfSize = FVector( 0.f, 50.f, 1000.f );
 
 	/** Default speed limit of the vehicle if it's not in any speed zone */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Traffic Sim Ai Controlled Car|Properties" )
 	float DefaultSpeedLimit = 1388.89f; // 50 km/h
+
 	
+	/** Called by a speed zone if this vehicle has entered it */
 	void OnEnteredSpeedZone( ASpeedZone* SpeedZone );
+
+	/** Called by a speed zone if this vehicle has left it */
 	void OnLeftSpeedZone();
 
+	/** Called by a stop zone if this vehicle has entered it */
 	void OnEnteredStopZone( AStopZone* StopZone );
+
+	/** Called by a stop zone if this vehicle has left it */
 	void OnLeftStopZone();
+
 	
-	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
+	FORCEINLINE const TObjectPtr< UChaosWheeledVehicleMovementComponent >& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 
 	virtual void Tick( float DeltaSeconds ) override;
 };

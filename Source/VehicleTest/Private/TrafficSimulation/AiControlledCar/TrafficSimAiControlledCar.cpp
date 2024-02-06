@@ -35,24 +35,29 @@ void ATrafficSimAiControlledCar::UpdateBlackboardVariables()
 {
 	if ( !AiController || !AiController->GetBlackboardComponent() )
 		return;
-
-	bIsMoving = FMath::Abs( ChaosVehicleMovement->GetForwardSpeed() ) > 0.1f;
-	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameIsMoving, bIsMoving );
-
-	// the order in which those methods are called is crucial!
 	
+	// the order in which those methods are called may be crucial!
+
+	UpdateIsMoving();
 	UpdateDistanceToObstacleAhead();
-
 	UpdateIsStopZoneAhead();
-
 	UpdateEstimatedBrakingDistance();
 	UpdateDistanceToStopPoint();
 	UpdateShouldBreak();
-	
 	UpdateSuggestedBreakStrength();
-	
 	UpdateAboveSpeedLimit();
 	UpdateBelowSpeedLimit();
+}
+
+void ATrafficSimAiControlledCar::UpdateIsMoving()
+{
+	SetIsMoving( FMath::Abs( ChaosVehicleMovement->GetForwardSpeed() ) > 0.1f );	
+}
+
+void ATrafficSimAiControlledCar::SetIsMoving(bool NewIsMoving)
+{
+	bIsMoving = NewIsMoving;
+	AiController->GetBlackboardComponent()->SetValueAsBool( BBTNameIsMoving, bIsMoving );
 }
 
 void ATrafficSimAiControlledCar::UpdateEstimatedBrakingDistance()
@@ -75,7 +80,7 @@ void ATrafficSimAiControlledCar::UpdateDistanceToObstacleAhead()
 		GetActorLocation() + GetActorForwardVector() * VehicleCollisionTraceDistance,
 		VehicleCollisionBoxTraceHalfSize,
 		FRotator( 0.f, 0.f, 0.f ),
-		VehicleCollisionChannel, // TODO: change to obstacle collision channel
+		VehicleCollisionTraceChannel,
 		false,
 		TArray< AActor* >( { this } ),
 		EDrawDebugTrace::None,
@@ -219,7 +224,6 @@ void ATrafficSimAiControlledCar::OnLeftStopZone()
 {
 	SetIsInStopZone( false );
 }
-
 
 void ATrafficSimAiControlledCar::Tick(float DeltaSeconds)
 {
