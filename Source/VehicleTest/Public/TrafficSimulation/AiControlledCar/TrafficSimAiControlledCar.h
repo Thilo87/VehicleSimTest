@@ -113,7 +113,13 @@ public:
 	
 	/** Minimum distance the vehicle should maintain to the car ahead */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-	float MinDistanceToObstacleAhead = 1000.f;
+	float MinDistanceToVehicle = 1000.f;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	float MinDistanceToTrafficLight = 1000.f;
+	
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	float MinDistanceToStopLine = 100.f;
 
 	/** Collision channel for vehicles */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )

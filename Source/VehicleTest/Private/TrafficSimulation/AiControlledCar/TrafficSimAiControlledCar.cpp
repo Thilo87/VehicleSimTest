@@ -4,6 +4,8 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Pawns/VehicleTestPawn.h"
+#include "TrafficRegulationActors/StopZone/StopZone.h"
 #include "TrafficRegulationActors/TrafficLight/TrafficLight.h"
 #include "TrafficSimulation/TrafficSimAIController.h"
 
@@ -87,7 +89,17 @@ void ATrafficSimAiControlledCar::UpdateDistanceToStopPoint()
 		return;
 	}
 
-	SetDistanceToStopPoint( FMath::Max( 0.f, DistanceToObstacleAhead - MinDistanceToObstacleAhead ) );
+	const AActor* ActorAhead = ObstacleAheadHitResult.GetActor();
+	
+	float MinDistance = 0.f;
+	if ( Cast< ATrafficLight >( ActorAhead ) )
+		MinDistance = MinDistanceToTrafficLight;
+	else if ( Cast< AStopZone >( ActorAhead ) )
+		MinDistance = MinDistanceToStopLine;
+	else if ( Cast< ATrafficSimAiControlledCar >( ActorAhead ) || Cast< AVehicleTestPawn >( ActorAhead ) )
+		MinDistance = MinDistanceToVehicle;
+
+	SetDistanceToStopPoint( FMath::Max( 0.f, DistanceToObstacleAhead - MinDistance ) );
 }
 
 void ATrafficSimAiControlledCar::SetDistanceToStopPoint(float NewDistanceToStopPoint)
