@@ -83,8 +83,6 @@ void ATrafficLight::BeginPlay()
 	// first rewind the current phase to the previous one
 	CurrentPhase = GetPreviousPhase();
 	OnPhaseTimerTriggered();
-
-	
 }
 
 ETrafficLightPhase ATrafficLight::GetCurrentPhase() const
